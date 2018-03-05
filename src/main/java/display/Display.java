@@ -1,5 +1,7 @@
 package display;
 
+import io.Input;
+
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,10 +14,10 @@ import java.util.Arrays;
 
 import javax.swing.JFrame;
 
-public abstract class Display {
+public class Display {
 
-    private static boolean created = false;
-    private static JFrame window;
+    private static boolean created = false; // defines that is the class is created of not.
+    private static JFrame window; // frame (window) on which will be placed all components.
     private static Canvas content;
 
     private static BufferedImage buffer;
@@ -27,8 +29,9 @@ public abstract class Display {
 
     public static void create(int width, int height, String title, int _clearColor, int numBuffers) {
 
-        if (created)
-            return;
+        if (created){
+            return; // if this class already created.
+        }
 
         window = new JFrame(title);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,6 +84,12 @@ public abstract class Display {
 
     public static void setTitle(String title) {
         window.setTitle(title);
+    }
+
+    // add Input (JComponent) into JFrame
+
+    public static void addInput(Input input){
+        window.add(input);
     }
 
 }

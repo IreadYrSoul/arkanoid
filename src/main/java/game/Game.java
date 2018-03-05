@@ -1,7 +1,11 @@
 package game;
 
 import display.Display;
+import io.Input;
 import util.Time;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Game implements Runnable {
 
@@ -17,12 +21,17 @@ public class Game implements Runnable {
 
     private static boolean running; // game running or not.
     private Thread gameThread; // the thread which rule the game process.
+    private Input input; // a component which encapsulate state of keyboard keys and handle them.
+    private Graphics2D graphics;
 
     // creates instance and initialize display of game.
 
     public Game(){
         running = false;
         Display.create(WIDTH, HEIGHT, TITLE, CLEAR_COLOR, NUM_BUFFERS);
+        graphics = Display.getGraphics();
+        input = new Input();
+        Display.addInput(input);
     }
 
     // method which start the game.
@@ -54,6 +63,13 @@ public class Game implements Runnable {
 
     private void update(){
 
+        if (input.getKey(KeyEvent.VK_LEFT)){
+            System.out.println("go to left");
+        }
+
+        if (input.getKey(KeyEvent.VK_RIGHT)){
+            System.out.println("go to right");
+        }
     }
 
     // method which draw all after when update method calculated all.
