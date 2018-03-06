@@ -1,6 +1,7 @@
 package game;
 
 import display.Display;
+import graphics.Textures;
 import io.Input;
 import util.Time;
 
@@ -23,6 +24,10 @@ public class Game implements Runnable {
     private Thread gameThread; // the thread which rule the game process.
     private Input input; // a component which encapsulate state of keyboard keys and handle them.
     private Graphics2D graphics;
+    private Textures textures;
+
+    //temp
+    int x = 150;
 
     // creates instance and initialize display of game.
 
@@ -32,6 +37,8 @@ public class Game implements Runnable {
         graphics = Display.getGraphics();
         input = new Input();
         Display.addInput(input);
+        // temp
+        textures = new Textures("platform.png");
     }
 
     // method which start the game.
@@ -64,11 +71,11 @@ public class Game implements Runnable {
     private void update(){
 
         if (input.getKey(KeyEvent.VK_LEFT)){
-            System.out.println("go to left");
+            x -= 4;
         }
 
         if (input.getKey(KeyEvent.VK_RIGHT)){
-            System.out.println("go to right");
+            x += 4;
         }
     }
 
@@ -76,6 +83,10 @@ public class Game implements Runnable {
 
     private void render(){
         Display.clear();
+
+        //temp
+        graphics.drawImage(textures.cut(0,0,110,35), x, 500, null);
+
         Display.swapBuffers();
     }
 
