@@ -1,8 +1,9 @@
 package game;
 
 import display.Display;
-import graphics.Textures;
+import graphics.Texture;
 import io.Input;
+import level.Level;
 import util.Time;
 
 import java.awt.*;
@@ -10,8 +11,8 @@ import java.awt.event.KeyEvent;
 
 public class Game implements Runnable {
 
-    private static final int WIDTH = 400; // width of game window.
-    private static final int HEIGHT = 600; // height of game window.
+    public static final int WIDTH = 400; // width of game window.
+    public static final int HEIGHT = 600; // height of game window.
     private static final String TITLE = "Tetris v 1.0"; // title of game window.
     private static final int CLEAR_COLOR = 0xff000000; // color which clean game background.
     private static final int NUM_BUFFERS = 3; // amount of image buffers.
@@ -24,10 +25,9 @@ public class Game implements Runnable {
     private Thread gameThread; // the thread which rule the game process.
     private Input input; // a component which encapsulate state of keyboard keys and handle them.
     private Graphics2D graphics;
-    private Textures textures;
-
-    //temp
-    int x = 150;
+    private Platform platform;
+    private Ball ball;
+    private Level lvl;
 
     // creates instance and initialize display of game.
 
@@ -38,7 +38,9 @@ public class Game implements Runnable {
         input = new Input();
         Display.addInput(input);
         // temp
-        textures = new Textures("platform.png");
+        platform = new Platform(150, 500);
+        ball = new Ball(350, 500);
+        lvl = new Level(ball);
     }
 
     // method which start the game.
@@ -70,13 +72,9 @@ public class Game implements Runnable {
 
     private void update(){
 
-        if (input.getKey(KeyEvent.VK_LEFT)){
-            x -= 4;
-        }
-
-        if (input.getKey(KeyEvent.VK_RIGHT)){
-            x += 4;
-        }
+        // temp
+        lvl.update();
+        platform.update(input);
     }
 
     // method which draw all after when update method calculated all.
@@ -84,8 +82,10 @@ public class Game implements Runnable {
     private void render(){
         Display.clear();
 
-        //temp
-        graphics.drawImage(textures.cut(0,0,110,35), x, 500, null);
+        // temp
+        lvl.render(graphics);
+        ball.render(graphics);
+        platform.render(graphics);
 
         Display.swapBuffers();
     }

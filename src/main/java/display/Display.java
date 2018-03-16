@@ -5,10 +5,13 @@ import io.Input;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Display {
@@ -31,7 +34,7 @@ public class Display {
         }
 
         window = new JFrame(title);
-        window.setIconImage(new ImageIcon("images/ball.png").getImage());
+        window.setIconImage(new ImageIcon("images/title.png").getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         content = new Canvas();
 
