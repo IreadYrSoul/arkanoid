@@ -13,7 +13,7 @@ public class LevelLoader {
 
     public static int[][] getLevel(String path){
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(path)))){
-            String line = null;
+            String line;
             List<int[]> list = new ArrayList<>();
             while ((line = reader.readLine()) != null){
                 list.add(parseToInt(line));

@@ -1,5 +1,6 @@
 package display;
 
+import graphics.Texture;
 import io.Input;
 
 import java.awt.*;
@@ -22,6 +23,7 @@ public class Display {
 
     private static BufferedImage buffer;
     private static int[] bufferData;
+    private static int[] temp;
     private static Graphics bufferGraphics;
     private static int clearColor;
 
@@ -34,7 +36,7 @@ public class Display {
         }
 
         window = new JFrame(title);
-        window.setIconImage(new ImageIcon("images/title.png").getImage());
+        window.setIconImage(new ImageIcon("images/logo.png").getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         content = new Canvas();
 
@@ -47,8 +49,13 @@ public class Display {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        // temp
+
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         bufferData = ((DataBufferInt) buffer.getRaster().getDataBuffer()).getData();
+
+        // temp
+
         bufferGraphics = buffer.getGraphics();
         ((Graphics2D) bufferGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         clearColor = _clearColor;
@@ -57,7 +64,6 @@ public class Display {
         bufferStrategy = content.getBufferStrategy();
 
         created = true;
-
     }
 
     public static void clear() {
@@ -92,5 +98,4 @@ public class Display {
     public static void addInput(Input input){
         window.add(input);
     }
-
 }

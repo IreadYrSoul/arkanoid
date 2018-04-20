@@ -2,7 +2,8 @@ package game;
 
 import graphics.Texture;
 import io.Input;
-import java.awt.Graphics2D;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
@@ -21,19 +22,31 @@ public class Platform extends GameComponent {
     // depending of direction (LEFT / RIGHT) platform will
     // moving on left or on right with speed equal 3 pixels per time unit.
 
-
+    @Override
     public void update(Input input) {
         if (input.getKey(KeyEvent.VK_LEFT)) {
-            if (x != 0) {
+            if (x >= 0) {
                 x -= speed;
             }           
         }
+
         if (input.getKey(KeyEvent.VK_RIGHT)) {
-            if ((int) x + image.getWidth() + 5 <= Game.WIDTH) {
+            if (x + image.getWidth() <= Game.WIDTH) {
                 x += speed; 
             }
         }
-        
+    }
+
+    public int getX(){
+        return super.x;
+    }
+
+    public int getY(){
+        return super.y;
+    }
+
+    public Rectangle getBound(){
+        return new Rectangle(x, y, image.getWidth(), image.getHeight());
     }
 
     // renders image which represents THIS game component

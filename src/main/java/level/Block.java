@@ -11,6 +11,7 @@ public class Block {
 
 
     public Block(BufferedImage image, BlockType type) {
+
         this.image = image;
         this.type = type;
     }

@@ -1,19 +1,19 @@
 package game;
 
 import display.Display;
-import graphics.Texture;
 import io.Input;
 import level.Level;
+import util.CollisionHandler;
+import util.LevelHandler;
 import util.Time;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class Game implements Runnable {
 
-    public static final int WIDTH = 400; // width of game window.
-    public static final int HEIGHT = 600; // height of game window.
-    private static final String TITLE = "Tetris v 1.0"; // title of game window.
+    public static final int WIDTH = 800; // width of game window.
+    public static final int HEIGHT = 620; // height of game window.
+    private static final String TITLE = "Arkanoid v 1.0"; // title of game window.
     private static final int CLEAR_COLOR = 0xff000000; // color which clean game background.
     private static final int NUM_BUFFERS = 3; // amount of image buffers.
 
@@ -24,10 +24,12 @@ public class Game implements Runnable {
     private static boolean running; // game running or not.
     private Thread gameThread; // the thread which rule the game process.
     private Input input; // a component which encapsulate state of keyboard keys and handle them.
-    private Graphics2D graphics;
-    private Platform platform;
-    private Ball ball;
-    private Level lvl;
+    private static Graphics2D graphics; // game component which represent shared game graphics.
+    private static Background background; // game component which represent game background.
+    private static Platform platform; // game component representing platform which user manage.
+    private static Ball ball; // game component that represent running ball.
+    private static Level lvl; // current level game.
+    private static LevelHandler levelHandler; // level handler.
 
     // creates instance and initialize display of game.
 
@@ -36,11 +38,13 @@ public class Game implements Runnable {
         Display.create(WIDTH, HEIGHT, TITLE, CLEAR_COLOR, NUM_BUFFERS);
         graphics = Display.getGraphics();
         input = new Input();
+        levelHandler = new LevelHandler();
         Display.addInput(input);
         // temp
+        background = new Background(0,20);
         platform = new Platform(150, 500);
-        ball = new Ball(350, 500);
-        lvl = new Level(ball);
+        ball = new Ball(0,0, platform);
+        lvl = levelHandler.firstLevel();
     }
 
     // method which start the game.
@@ -71,9 +75,22 @@ public class Game implements Runnable {
     // method which compute all logic and physics of game.
 
     private void update(){
-
-        // temp
         lvl.update();
+
+        int activeBlocks = 0;
+        for(int[] cellLine: lvl.getLevelMap()){
+            for (int cell: cellLine){
+                if (cell != 0) activeBlocks++;
+            }
+        }
+        if (activeBlocks == 0){
+            lvl = LevelHandler.nextLevel();
+            ball.startPosition();
+        }
+
+        ball.update(input);
+        CollisionHandler.blockCollision(lvl, ball);
+        CollisionHandler.platformCollision(platform, ball);
         platform.update(input);
     }
 
@@ -81,8 +98,8 @@ public class Game implements Runnable {
 
     private void render(){
         Display.clear();
-
         // temp
+        background.render(graphics);
         lvl.render(graphics);
         ball.render(graphics);
         platform.render(graphics);
@@ -139,7 +156,7 @@ public class Game implements Runnable {
             }
 
             if (counter >= Time.SECOND){
-                Display.setTitle(TITLE + "             | fps:" + fps + " | upd:" + upd + " | updl:" + updl + " |"); // if elapsed time after start the game equals or more than 1 seconds.
+                Display.setTitle(TITLE + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t| fps:" + fps + " | upd:" + upd + " | updl:" + updl + " |"); // if elapsed time after start the game equals or more than 1 seconds.
                 fps = 0;
                 upd = 0;
                 updl = 0;
