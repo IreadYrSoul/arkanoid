@@ -1,13 +1,20 @@
-package game;
+package components;
 
-import graphics.Texture;
+import game.Game;
 import io.Input;
-
+import util.SpriteLoader;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * Simple game component class that extending
+ * {@link GameComponent} and represents Ball in game.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
 
 public class Ball extends GameComponent {
 
@@ -19,9 +26,10 @@ public class Ball extends GameComponent {
 
     public Ball(int x, int y, Platform platform){
         super(x, y);
-        image = Texture.getImage("ball.png");
-        stop = true;
         this.platform = platform;
+        image = SpriteLoader.load("images/ball.png");
+        startPosition();
+        stop = true;
     }
 
     @Override
@@ -30,29 +38,29 @@ public class Ball extends GameComponent {
             stop = false;
         }
 
-        if (!stop) {
-            if (x <= 20) {
+        if (!stop) {        // if ball moving.
+            if (x <= 0) {
                 dX = 2;
             }
 
-            if (x + image.getWidth() >= Game.WIDTH - 20) {
+            if (x + image.getWidth() >= Game.WIDTH) {
                 dX = -2;
             }
 
-            if (y <= 20) {
+            if (y <= 0) {
                 dY = 5;
             }
 
-            if (y + image.getHeight() >= Game.HEIGHT) {
-                dY = -5;
+            if (y > Game.HEIGHT){
+                stop = true;
             }
 
-            x += dX;
-            y += dY;
         } else {
-            x = platform.x + (platform.getBound().width / 2) - 8;
-            y = platform.y - 16;
+            startPosition();
         }
+
+        x += dX;
+        y += dY;
     }
 
     public static void changeDx(){
@@ -81,8 +89,7 @@ public class Ball extends GameComponent {
     }
 
     public void startPosition() {
-        stop = true;
-        x = platform.x + (platform.getBound().width / 2) - 8;
-        y = platform.y - 16;
+        this.x = platform.x + (platform.getBound().width / 2) - image.getWidth() / 2;
+        this.y = platform.y - 18;
     }
 }

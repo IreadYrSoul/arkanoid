@@ -1,5 +1,13 @@
 package level;
 
+/**
+ * Class that represents different types
+ * of game blocks {@link Block}.
+ *
+ * @author Alexsnder Naumov.
+ * @version 1.0
+ */
+
 
 public enum BlockType {
 

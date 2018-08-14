@@ -1,29 +1,31 @@
 package display;
 
-import graphics.Texture;
 import io.Input;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
+
+/**
+ * Class that response for drawing graphics,
+ * construct and configure frame.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
 
 public class Display {
 
     private static boolean created = false; // defines that is the class is created of not.
     private static JFrame window; // frame (window) on which will be placed all components.
+    private static JMenuBar menuBar;
     private static Canvas content;
 
     private static BufferedImage buffer;
     private static int[] bufferData;
-    private static int[] temp;
     private static Graphics bufferGraphics;
     private static int clearColor;
 
@@ -36,9 +38,22 @@ public class Display {
         }
 
         window = new JFrame(title);
-        window.setIconImage(new ImageIcon("images/logo.png").getImage());
+        window.setIconImage(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/logo.png")).getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         content = new Canvas();
+
+        menuBar = new JMenuBar();
+        window.setJMenuBar(menuBar);
+        JMenu game = new JMenu("Game");
+        JMenu help = new JMenu("Help");
+        JMenuItem newGame = new JMenuItem("New Game");
+        JMenuItem exit = new JMenuItem("Exit");
+        JMenuItem about = new JMenuItem("About");
+        game.add(newGame);
+        game.add(exit);
+        help.add(about);
+        menuBar.add(game);
+        menuBar.add(help);
 
         Dimension size = new Dimension(width, height);
         content.setPreferredSize(size);
@@ -49,13 +64,8 @@ public class Display {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        // temp
-
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         bufferData = ((DataBufferInt) buffer.getRaster().getDataBuffer()).getData();
-
-        // temp
-
         bufferGraphics = buffer.getGraphics();
         ((Graphics2D) bufferGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         clearColor = _clearColor;
@@ -81,12 +91,9 @@ public class Display {
     }
 
     public static void destroy() {
-
         if (!created)
             return;
-
         window.dispose();
-
     }
 
     public static void setTitle(String title) {

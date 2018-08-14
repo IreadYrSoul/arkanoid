@@ -1,14 +1,22 @@
 package util;
 
-import game.Ball;
-import game.Platform;
+import components.Ball;
+import components.Platform;
 import level.Level;
 import java.awt.*;
 
+/**
+ * Util class that response for handling collisions between
+ * blocks {@link level.Block} and ball {@link Ball} or
+ * platform {@link Platform} and ball.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
 
 public class CollisionHandler {
 
-    public static void blockCollision(Level level, Ball ball){
+    public static boolean blockCollision(Level level, Ball ball){
         for (Rectangle block : level.getRectangleList()){
             if (ball.getCircle().intersects(block)){
                 boolean minWidth = ball.getCircle().getCenterX() >= block.x;
@@ -22,10 +30,11 @@ public class CollisionHandler {
                 }
                 int x = block.x;
                 int y = block.y;
-                level.removeBlock((y/20), (x/50));
-                break;
+                level.removeBlock((y / Level.BLOCK_HEIGHT), (x / Level.BLOCK_WIDTH));
+                return true;
             }
         }
+        return false;
     }
 
     public static void platformCollision(Platform platform, Ball ball){

@@ -1,21 +1,29 @@
-package game;
+package components;
 
-import graphics.Texture;
+import game.Game;
 import io.Input;
-
+import util.SpriteLoader;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+
+/**
+ * Game component class that extends {@link GameComponent}
+ * and represents player handled platform.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
 
 
 public class Platform extends GameComponent {
     
     private float speed = 3; // speed of THIS component moving on display.
-    private BufferedImage image; // picture which represents how this game component look.
+    private static BufferedImage image; // picture which represents how this game component look.
 
     public Platform(int x, int y) {
         super(x, y);
-        image = Texture.getImage("platform.png");
+        image = SpriteLoader.load("images/platform.png");
     }
 
     // represent moving of THIS game component.
@@ -25,7 +33,7 @@ public class Platform extends GameComponent {
     @Override
     public void update(Input input) {
         if (input.getKey(KeyEvent.VK_LEFT)) {
-            if (x >= 0) {
+            if (x >= 3) {
                 x -= speed;
             }           
         }
@@ -37,20 +45,9 @@ public class Platform extends GameComponent {
         }
     }
 
-    public int getX(){
-        return super.x;
-    }
-
-    public int getY(){
-        return super.y;
-    }
-
     public Rectangle getBound(){
         return new Rectangle(x, y, image.getWidth(), image.getHeight());
     }
-
-    // renders image which represents THIS game component
-    // and draw its on display.
 
     @Override
     public void render(Graphics2D g) {

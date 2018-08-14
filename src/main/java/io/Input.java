@@ -4,6 +4,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
+/**
+ * Class that extends {@link JComponent} and responsible
+ * for typing and processing them.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
+
 public class Input extends JComponent{
 
     private boolean[] map; // array which persist buttons state (false = released, true = pressed).

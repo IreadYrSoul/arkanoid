@@ -1,13 +1,18 @@
 package level;
 
-import game.Game;
-import graphics.Texture;
-
+import util.SpriteLoader;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * Simple game component class that represents
+ * blocks {@link Block} composed as game level.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
 
 
 public class Level {
@@ -16,18 +21,17 @@ public class Level {
     public static final int BLOCK_HEIGHT = 20;
     private static int[][] levelMap;
     private static Map<BlockType, Block> map;
-    public ArrayList<Rectangle> rectangleList;
+    private ArrayList<Rectangle> rectangleList;
 
 
     public Level(int[][] array) {
         map = new HashMap<>();
-
-        map.put(BlockType.BLUE, new Block(Texture.getImage("blue.png"), BlockType.BLUE));
-        map.put(BlockType.GREEN, new Block(Texture.getImage("green.png"), BlockType.GREEN));
-        map.put(BlockType.YELLOW, new Block(Texture.getImage("yellow.png"), BlockType.YELLOW));
-        map.put(BlockType.RED, new Block(Texture.getImage("red.png"), BlockType.RED));
-        map.put(BlockType.VIOLET, new Block(Texture.getImage("violet.png"), BlockType.VIOLET));
-        map.put(BlockType.EMPTY, new Block(Texture.getImage("grey.png"), BlockType.EMPTY));
+        map.put(BlockType.BLUE, new Block(SpriteLoader.load("images/blue.png"), BlockType.BLUE));
+        map.put(BlockType.GREEN, new Block(SpriteLoader.load("images/green.png"), BlockType.GREEN));
+        map.put(BlockType.YELLOW, new Block(SpriteLoader.load("images/yellow.png"), BlockType.YELLOW));
+        map.put(BlockType.RED, new Block(SpriteLoader.load("images/red.png"), BlockType.RED));
+        map.put(BlockType.VIOLET, new Block(SpriteLoader.load("images/violet.png"), BlockType.VIOLET));
+        map.put(BlockType.EMPTY, new Block(SpriteLoader.load("images/grey.png"), BlockType.EMPTY));
 
         levelMap = array;
         rectangleList = new ArrayList<>();
@@ -47,7 +51,7 @@ public class Level {
         updateMap();
     }
 
-    public void updateMap(){
+    private void updateMap(){
         rectangleList.clear();
         for (int y = 0; y < levelMap.length; y++) {
             for (int x = 0; x < levelMap[y].length; x++) {

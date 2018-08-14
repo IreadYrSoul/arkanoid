@@ -1,18 +1,27 @@
 package game;
 
+import components.*;
 import display.Display;
 import io.Input;
 import level.Level;
 import util.CollisionHandler;
-import util.LevelHandler;
+import util.LevelLoader;
 import util.Time;
-
 import java.awt.*;
+
+
+/**
+ * The Main game class that handles game logic and
+ * lifecycle all game components.
+ *
+ * @author Alexander Naumov.
+ * @version 1.0
+ */
 
 public class Game implements Runnable {
 
     public static final int WIDTH = 800; // width of game window.
-    public static final int HEIGHT = 620; // height of game window.
+    public static final int HEIGHT = 600; // height of game window.
     private static final String TITLE = "Arkanoid v 1.0"; // title of game window.
     private static final int CLEAR_COLOR = 0xff000000; // color which clean game background.
     private static final int NUM_BUFFERS = 3; // amount of image buffers.
@@ -23,28 +32,41 @@ public class Game implements Runnable {
 
     private static boolean running; // game running or not.
     private Thread gameThread; // the thread which rule the game process.
-    private Input input; // a component which encapsulate state of keyboard keys and handle them.
+    private static Input input; // a component which encapsulate state of keyboard keys and handle them.
+
     private static Graphics2D graphics; // game component which represent shared game graphics.
     private static Background background; // game component which represent game background.
     private static Platform platform; // game component representing platform which user manage.
     private static Ball ball; // game component that represent running ball.
     private static Level lvl; // current level game.
-    private static LevelHandler levelHandler; // level handler.
+    private static GamePoint gamePoint;
+    private static Live[] lives;
 
     // creates instance and initialize display of game.
 
     public Game(){
         running = false;
+        initComponents();
         Display.create(WIDTH, HEIGHT, TITLE, CLEAR_COLOR, NUM_BUFFERS);
-        graphics = Display.getGraphics();
-        input = new Input();
-        levelHandler = new LevelHandler();
         Display.addInput(input);
-        // temp
-        background = new Background(0,20);
-        platform = new Platform(150, 500);
-        ball = new Ball(0,0, platform);
-        lvl = levelHandler.firstLevel();
+        graphics = Display.getGraphics();
+    }
+
+    /* init all game components */
+
+    private static void initComponents(){
+        input = new Input();
+        background = new Background(0, 0);
+        platform = new Platform(375, 500);
+        ball = new Ball(0, 0, platform);
+        lvl = new LevelLoader().createLevel();
+        gamePoint = new GamePoint();
+        lives = new Live[3];
+        int liveX = 80;
+        for (int i = 0; i < lives.length; i++){
+            lives[i] = new Live(liveX, 575);
+            liveX += Live.getImage().getWidth() + 5;
+        }
     }
 
     // method which start the game.
@@ -78,18 +100,23 @@ public class Game implements Runnable {
         lvl.update();
 
         int activeBlocks = 0;
-        for(int[] cellLine: lvl.getLevelMap()){
+        for(int[] cellLine: Level.getLevelMap()){
             for (int cell: cellLine){
                 if (cell != 0) activeBlocks++;
             }
         }
         if (activeBlocks == 0){
-            lvl = LevelHandler.nextLevel();
+            lvl = new LevelLoader().createLevel();
             ball.startPosition();
         }
 
         ball.update(input);
-        CollisionHandler.blockCollision(lvl, ball);
+        boolean collision = CollisionHandler.blockCollision(lvl, ball);
+
+        if (collision){
+            gamePoint.increment();
+        }
+
         CollisionHandler.platformCollision(platform, ball);
         platform.update(input);
     }
@@ -98,13 +125,37 @@ public class Game implements Runnable {
 
     private void render(){
         Display.clear();
-        // temp
+
         background.render(graphics);
         lvl.render(graphics);
         ball.render(graphics);
         platform.render(graphics);
+        renderStatistics();
 
         Display.swapBuffers();
+    }
+
+    // method which renders game statistics in black panel.
+
+    private void renderStatistics(){
+        Font font = new Font("Arial", Font.BOLD, 18);
+        graphics.setFont(font);
+        graphics.drawString(gamePoint.getTotal(), 5,590);
+        graphics.setColor(Color.white);
+        for (Live live: lives){
+            if (live != null) {
+                live.render(graphics);
+            }
+        }
+        graphics.drawString("Level: " + LevelLoader.getCurrentLevelFile(), WIDTH - 100,590);
+    }
+
+    public static Live[] getLives() {
+        return lives;
+    }
+
+    public static void setLives(Live[] lives) {
+        Game.lives = lives;
     }
 
     // method which close unhelpful resources.
