@@ -2,67 +2,73 @@ package components;
 
 import game.Game;
 import io.Input;
-import util.SpriteLoader;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
 
 /**
  * Simple game component class that extending
- * {@link GameComponent} and represents Ball in game.
+ * {@link DynamicGameComponent} and represents ball in game.
  *
  * @author Alexander Naumov.
  * @version 1.0
  */
+public class Ball extends DynamicGameComponent {
 
-public class Ball extends GameComponent {
+    /**
+     * Radius of ball in pixels.
+     */
+    private static final int radius = 9;
 
-    private static int dY = 5; // speed which ball moving on left / right.
-    private static int dX = 2; // speed which ball moving on up /down.
-    private static BufferedImage image; // image which represent view ball.
-    private boolean stop;
-    private Platform platform;
+    /**
+     * Speed for up/down moving.
+     */
+    private static int dY = 5;
 
-    public Ball(int x, int y, Platform platform){
+    /**
+     * Speed for left/right moving.
+     */
+    private static int dX = 2;
+
+    /**
+     * Is ball stopped.
+     */
+    private static boolean stop;
+
+    public Ball(int x, int y){
         super(x, y);
-        this.platform = platform;
-        image = SpriteLoader.load("images/ball.png");
-        startPosition();
         stop = true;
     }
 
+    /**
+     * Implementation of {@link DynamicGameComponent}.
+     */
     @Override
     public void update(Input input) {
         if (input.getKey(KeyEvent.VK_SPACE)) {
             stop = false;
         }
-
-        if (!stop) {        // if ball moving.
+        if (!stop) {
             if (x <= 0) {
                 dX = 2;
             }
-
-            if (x + image.getWidth() >= Game.WIDTH) {
+            if (x + radius >= Game.WIDTH) {
                 dX = -2;
             }
-
             if (y <= 0) {
                 dY = 5;
             }
-
             if (y > Game.HEIGHT){
                 stop = true;
             }
-
-        } else {
-            startPosition();
+            x += dX;
+            y += dY;
         }
-
-        x += dX;
-        y += dY;
     }
 
+    /**
+     * Switch move direction for X axis.
+     */
     public static void changeDx(){
         if (dX > 0) {
             dX = -2;
@@ -71,6 +77,9 @@ public class Ball extends GameComponent {
         }
     }
 
+    /**
+     * Switch move direction for Y axis.
+     */
     public static void changeDy(){
         if (dY > 0) {
             dY = -5;
@@ -79,17 +88,27 @@ public class Ball extends GameComponent {
         }
     }
 
+    /**
+     * Get circle that represents ball.
+     */
     public Ellipse2D getCircle(){
-        return new Ellipse2D.Double(x, y, image.getWidth(), image.getHeight());
+        return new Ellipse2D.Double(x, y, 2 * radius, 2 * radius);
     }
 
+    /**
+     * Implementation of {@link GameComponent}.
+     */
     @Override
     public void render(Graphics2D g) {
-        g.drawImage(image, x, y, image.getWidth(), image.getHeight(), null);
+        g.setColor(Color.white);
+        g.fillOval(x, y, 2 * radius, 2 * radius);
     }
 
-    public void startPosition() {
-        this.x = platform.x + (platform.getBound().width / 2) - image.getWidth() / 2;
-        this.y = platform.y - 18;
+    /**
+     * Set ball on platform.
+     */
+    public void startPosition(int pX, int pY, int pWidth) {
+        this.x = pX + (pWidth / 2);
+        this.y = pY - radius + 1;
     }
 }

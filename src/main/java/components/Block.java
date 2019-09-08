@@ -27,9 +27,16 @@ public class Block extends GameComponent {
      */
     private Color color;
 
-    Block(int x, int y, Color color) {
+    public Block(int x, int y, Color color) {
         super(x, y);
         this.color = color;
+    }
+
+    /**
+     * Get rectangle that represent block.
+     */
+    public Rectangle getBound(){
+        return new Rectangle(x, y, WIDTH, HEIGHT);
     }
 
     /**
@@ -39,7 +46,7 @@ public class Block extends GameComponent {
     public void render(Graphics2D g) {
         g.setColor(Color.black);
         g.fill(new RoundRectangle2D.Float(x * WIDTH, y * HEIGHT, WIDTH, HEIGHT, 9.0F, 9.0F));
-        g.setColor(color);
-        g.fill(new RoundRectangle2D.Float((x + 1), (y + 1), WIDTH - 2, HEIGHT - 2, 8.0F, 8.0F));
+        g.setColor(Color.white);
+        g.fill(new RoundRectangle2D.Float((x * WIDTH + 1), (y * HEIGHT + 1), WIDTH - 2, HEIGHT - 2, 8.0F, 8.0F));
     }
 }
