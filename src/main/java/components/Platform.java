@@ -2,55 +2,81 @@ package components;
 
 import game.Game;
 import io.Input;
-import util.SpriteLoader;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 /**
- * Game component class that extends {@link GameComponent}
+ * Game component class that extends {@link DynamicGameComponent}
  * and represents player handled platform.
  *
  * @author Alexander Naumov.
  * @version 1.0
  */
+public class Platform extends DynamicGameComponent {
 
+    /**
+     * Platform width in pixels.
+     */
+    private static final int WIDTH = 74;
 
-public class Platform extends GameComponent {
-    
-    private float speed = 3; // speed of THIS component moving on display.
-    private static BufferedImage image; // picture which represents how this game component look.
+    /**
+     * Platform height in pixels.
+     */
+    private static final int HEIGHT = 15;
+
+    /**
+     * left/right speed moving.
+     */
+    private static float speed = 2;
 
     public Platform(int x, int y) {
         super(x, y);
-        image = SpriteLoader.load("images/platform.png");
     }
 
-    // represent moving of THIS game component.
-    // depending of direction (LEFT / RIGHT) platform will
-    // moving on left or on right with speed equal 3 pixels per time unit.
-
+    /**
+     * Implementation of {@link DynamicGameComponent}.
+     */
     @Override
     public void update(Input input) {
         if (input.getKey(KeyEvent.VK_LEFT)) {
-            if (x >= 3) {
-                x -= speed;
-            }           
+            left();
         }
-
         if (input.getKey(KeyEvent.VK_RIGHT)) {
-            if (x + image.getWidth() <= Game.WIDTH) {
-                x += speed; 
-            }
+            right();
         }
     }
 
-    public Rectangle getBound(){
-        return new Rectangle(x, y, image.getWidth(), image.getHeight());
+    /**
+     * Move left.
+     */
+    private void left() {
+        if (x > 0) {
+            x -= speed;
+        }
     }
 
+    /**
+     * Move right.
+     */
+    private void right() {
+        if ((x + WIDTH) < Game.WIDTH) {
+            x += speed;
+        }
+    }
+
+    /**
+     * Get rectangle that represent platform.
+     */
+    public Rectangle getBound(){
+        return new Rectangle(x, y, WIDTH, HEIGHT);
+    }
+
+    /**
+     * Implementation of {@link DynamicGameComponent}.
+     */
     @Override
     public void render(Graphics2D g) {
-        g.drawImage(image, x, y, image.getWidth(), image.getHeight(), null);
+        g.setColor(Color.white);
+        g.fillRect(x, y, WIDTH, HEIGHT);
     }    
 }
