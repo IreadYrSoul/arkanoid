@@ -34,7 +34,7 @@ public class Platform extends DynamicGameComponent {
     }
 
     /**
-     * Implementation of {@link DynamicGameComponent}.
+     * Implementation of {@link DynamicGameComponent#update(Input)}.
      */
     @Override
     public void update(Input input) {
@@ -72,7 +72,7 @@ public class Platform extends DynamicGameComponent {
     }
 
     /**
-     * Implementation of {@link DynamicGameComponent}.
+     * Implementation of {@link DynamicGameComponent#render(Graphics2D)}.
      */
     @Override
     public void render(Graphics2D g) {

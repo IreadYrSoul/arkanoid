@@ -6,8 +6,7 @@ package components;
  * @author Alexander Naumov.
  * @version 1.0
  */
-
-public class GamePoint {
+public class GamePoints {
 
     private static int total  = 0;
 
@@ -15,7 +14,6 @@ public class GamePoint {
      * Adds 10 points to total point balance
      * after each collision.
      */
-
     public void increment(){
         total += 10;
     }
@@ -23,15 +21,14 @@ public class GamePoint {
     /**
      * Gets total point balance.
      */
-
     public String getTotal(){
         if (total == 0) {
             return "0000";
         } else if (total < 100) {
-            return "00" + Integer.toString(total);
+            return "00" + total;
         } else if (100 < total && total < 1000) {
-            return "0" + Integer.toString(total);
+            return "0" + total;
         }
-        return "0" + Integer.toString(total);
+        return "0" + total;
     }
 }

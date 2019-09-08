@@ -32,6 +32,9 @@ public class Block extends GameComponent {
         this.color = color;
     }
 
+    /**
+     * Implementation of {@link GameComponent#render(Graphics2D)}.
+     */
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.black);

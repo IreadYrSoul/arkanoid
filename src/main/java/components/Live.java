@@ -1,6 +1,5 @@
 package components;
 
-import io.Input;
 import util.SpriteLoader;
 
 import java.awt.*;
@@ -14,8 +13,11 @@ import java.awt.image.BufferedImage;
  * @version 1.0
  */
 
-public class Live extends GameComponent{
+public class Live extends GameComponent {
 
+    /**
+     * Image that represents 1 live.
+     */
     private static BufferedImage image;
 
     public Live(int x, int y){
@@ -23,15 +25,16 @@ public class Live extends GameComponent{
         image = SpriteLoader.load("images/live.png");
     }
 
+    /**
+     * Get current static image.
+     */
     public static BufferedImage getImage() {
         return image;
     }
 
-    @Override
-    public void update(Input input) {
-        // todo
-    }
-
+    /**
+     * Implementation of {@link GameComponent#render(Graphics2D)}.
+     */
     @Override
     public void render(Graphics2D g){
         g.drawImage(image, x, y, image.getWidth(), image.getHeight(), null);
