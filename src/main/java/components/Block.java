@@ -1,7 +1,7 @@
 package components;
 
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Game component class that extend {@link GameComponent}
@@ -36,7 +36,7 @@ public class Block extends GameComponent {
      * Get rectangle that represent block.
      */
     public Rectangle getBound(){
-        return new Rectangle(x, y, WIDTH, HEIGHT);
+        return new Rectangle(x * WIDTH, y * HEIGHT, WIDTH, HEIGHT);
     }
 
     /**
@@ -45,8 +45,8 @@ public class Block extends GameComponent {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.black);
-        g.fill(new RoundRectangle2D.Float(x * WIDTH, y * HEIGHT, WIDTH, HEIGHT, 9.0F, 9.0F));
+        g.fill(new Rectangle2D.Float(x * WIDTH, y * HEIGHT, WIDTH, HEIGHT));
         g.setColor(Color.white);
-        g.fill(new RoundRectangle2D.Float((x * WIDTH + 1), (y * HEIGHT + 1), WIDTH - 2, HEIGHT - 2, 8.0F, 8.0F));
+        g.fill(new Rectangle2D.Float((x * WIDTH + 1), (y * HEIGHT + 1), WIDTH - 2, HEIGHT - 2));
     }
 }

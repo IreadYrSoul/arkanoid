@@ -17,12 +17,12 @@ public class Platform extends DynamicGameComponent {
     /**
      * Platform width in pixels.
      */
-    private static final int WIDTH = 74;
+    public static final int WIDTH = 74;
 
     /**
      * Platform height in pixels.
      */
-    private static final int HEIGHT = 15;
+    public static final int HEIGHT = 15;
 
     /**
      * left/right speed moving.
@@ -76,7 +76,9 @@ public class Platform extends DynamicGameComponent {
      */
     @Override
     public void render(Graphics2D g) {
-        g.setColor(Color.white);
+        g.setColor(Color.black);
         g.fillRect(x, y, WIDTH, HEIGHT);
+        g.setColor(Color.white);
+        g.fillRect(x + 1, y + 1, WIDTH - 2, HEIGHT - 2);
     }    
 }

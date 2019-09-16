@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
  * @author Alexander Naumov.
  * @version 1.0
  */
-
 public class Live extends GameComponent {
 
     /**

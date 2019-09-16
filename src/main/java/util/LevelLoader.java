@@ -1,58 +1,82 @@
 package util;
 
 import level.Level;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Util class that responsible for loading files(1.lvl)
- * parsing their and creating Level classes {@link Level}
+ * parsing their and creating Level classes {@link Level}.
  *
  * @author Alexander Naumov.
  * @version 1.0
  */
-
 public class LevelLoader {
 
+    /**
+     * Level model.
+     */
     private static int[][] lvl;
+
+    /**
+     * Level width (in blocks).
+     */
     private static int width;
-    private static int currentLevelFile;
+
+    /**
+     * Current level file.
+     */
+    private static int currLevel;
+
+    /**
+     * Levels directory.
+     */
     private static final String DIR = "levels";
+
+    /**
+     * Levels names.
+     */
     private static String[] levelCatalog;
 
     public LevelLoader() {
         levelCatalog = levelCatalog();
-        currentLevelFile = 0;
+        currLevel = 0;
     }
 
-    /* bring all levels from directory "/resources/levels/" as string array */
-
+    /**
+     * Bring all levels from directory "/resources/levels/" as string array.
+     */
     private String[] levelCatalog() {
         ClassLoader classLoader = getClass().getClassLoader();
-        BufferedReader br = new BufferedReader(new InputStreamReader(classLoader.getResourceAsStream(DIR)));
-        List<String> list = new ArrayList<>();
-        br.lines().forEach(list::add);
-        /* todo: impossible read "resources/levels" folder when running already packaged jar file!!! */
-        return new String[]{"1.lvl", "2.lvl", "3.lvl"};
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(classLoader.getResourceAsStream(DIR))));
+        return br.lines().toArray(size -> new String[size]);
     }
 
-    /* create level  */
-
+    /**
+     * Create level next level.
+     */
     public Level createLevel() {
-        return new Level(getLevel(levelCatalog[currentLevelFile++]));
+        return new Level(getLevel(levelCatalog[currLevel++]));
     }
 
-    /* gets current number of Level (1.lvl, 2.lvl,...etc) */
-
-    public static String getCurrentLevelFile() {
-        return Integer.toString(currentLevelFile);
+    /**
+     * Gets current number of Level (1.lvl, 2.lvl,...etc).
+     */
+    public String getCurrLevel() {
+        return Integer.toString(currLevel);
     }
 
-    /* return int[][] where each element represents BlockType */
-
+    /**
+     * Get int[][] where each element represents some block.
+     */
     private int[][] getLevel(String path) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(DIR + "/" + path)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(getClass()
+                        .getClassLoader().getResourceAsStream(DIR + "/" + path))))) {
             List<int[]> list = new ArrayList<>();
             reader.lines().forEach(line -> list.add(parseToInt(line)));
             int height = list.size();
@@ -67,10 +91,11 @@ public class LevelLoader {
         return lvl;
     }
 
-    /* parse String line to int[], where line (or int[]) represent
-       line of Blocks on display */
-
-    private static int[] parseToInt(String line) {
+    /**
+     * Parse string line to int[], where line (or int[]) represent
+     * line of blocks on display.
+     */
+    private int[] parseToInt(String line) {
         char[] chars = line.toCharArray();
         int[] array = new int[chars.length];
         if (width == 0) {

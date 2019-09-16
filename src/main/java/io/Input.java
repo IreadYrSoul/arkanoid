@@ -11,7 +11,6 @@ import java.util.Arrays;
  * @author Alexander Naumov.
  * @version 1.0
  */
-
 public class Input extends JComponent{
 
     private boolean[] map; // array which persist buttons state (false = released, true = pressed).

@@ -1,4 +1,4 @@
-package model;
+package components;
 
 import components.Platform;
 import io.Input;

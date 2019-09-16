@@ -21,8 +21,6 @@ public class Display {
 
     private static boolean created = false; // defines that is the class is created of not.
     private static JFrame window; // frame (window) on which will be placed all components.
-    private static JMenuBar menuBar;
-    private static Canvas content;
 
     private static BufferedImage buffer;
     private static int[] bufferData;
@@ -38,11 +36,12 @@ public class Display {
         }
 
         window = new JFrame(title);
-        window.setIconImage(new ImageIcon(Thread.currentThread().getContextClassLoader().getResource("images/logo.png")).getImage());
+        window.setIconImage(new ImageIcon(Thread.currentThread()
+                .getContextClassLoader().getResource("images/logo.png")).getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        content = new Canvas();
+        Canvas content = new Canvas();
 
-        menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
         window.setJMenuBar(menuBar);
         JMenu game = new JMenu("Game");
         JMenu help = new JMenu("Help");
@@ -94,10 +93,6 @@ public class Display {
         if (!created)
             return;
         window.dispose();
-    }
-
-    public static void setTitle(String title) {
-        window.setTitle(title);
     }
 
     // add Input (JComponent) into JFrame

@@ -18,7 +18,7 @@ public class Ball extends DynamicGameComponent {
     /**
      * Radius of ball in pixels.
      */
-    private static final int radius = 9;
+    private static final int RADIUS = 9;
 
     /**
      * Speed for up/down moving.
@@ -35,9 +35,12 @@ public class Ball extends DynamicGameComponent {
      */
     private static boolean stop;
 
-    public Ball(int x, int y){
-        super(x, y);
+    private static boolean onPlatform;
+
+    public Ball() {
+        super(100, 100);
         stop = true;
+        onPlatform = true;
     }
 
     /**
@@ -47,12 +50,13 @@ public class Ball extends DynamicGameComponent {
     public void update(Input input) {
         if (input.getKey(KeyEvent.VK_SPACE)) {
             stop = false;
+            onPlatform = false;
         }
         if (!stop) {
             if (x <= 0) {
                 dX = 2;
             }
-            if (x + radius >= Game.WIDTH) {
+            if (x + RADIUS >= Game.WIDTH) {
                 dX = -2;
             }
             if (y <= 0) {
@@ -63,13 +67,20 @@ public class Ball extends DynamicGameComponent {
             }
             x += dX;
             y += dY;
+        } else if (onPlatform){
+            if (input.getKey(KeyEvent.VK_LEFT)) {
+                left();
+            }
+            if (input.getKey(KeyEvent.VK_RIGHT)) {
+                right();
+            }
         }
     }
 
     /**
      * Switch move direction for X axis.
      */
-    public static void changeDx(){
+    public void changeDx() {
         if (dX > 0) {
             dX = -2;
         } else{
@@ -80,7 +91,7 @@ public class Ball extends DynamicGameComponent {
     /**
      * Switch move direction for Y axis.
      */
-    public static void changeDy(){
+    public void changeDy() {
         if (dY > 0) {
             dY = -5;
         } else{
@@ -89,10 +100,28 @@ public class Ball extends DynamicGameComponent {
     }
 
     /**
+     * Move ball to left.
+     */
+    private void left() {
+        if (x > Platform.WIDTH / 2 - 9) {
+            x -= 2;
+        }
+    }
+
+    /**
+     * Move ball to right.
+     */
+    private void right() {
+        if (x < Game.WIDTH - (Platform.WIDTH / 2 + 9)) {
+            x += 2;
+        }
+    }
+
+    /**
      * Get circle that represents ball.
      */
     public Ellipse2D getCircle(){
-        return new Ellipse2D.Double(x, y, 2 * radius, 2 * radius);
+        return new Ellipse2D.Double(x, y, 2 * RADIUS, 2 * RADIUS);
     }
 
     /**
@@ -100,15 +129,17 @@ public class Ball extends DynamicGameComponent {
      */
     @Override
     public void render(Graphics2D g) {
+        g.setColor(Color.black);
+        g.fillOval(x, y, 2 * RADIUS, 2 * RADIUS);
         g.setColor(Color.white);
-        g.fillOval(x, y, 2 * radius, 2 * radius);
+        g.fillOval(x + 1, y + 1, (2 * RADIUS) - 2, (2 * RADIUS) - 2);
     }
 
     /**
      * Set ball on platform.
      */
-    public void startPosition(int pX, int pY, int pWidth) {
-        this.x = pX + (pWidth / 2);
-        this.y = pY - radius + 1;
+    public void startPosition(int pX, int pY) {
+        this.x = pX + (Platform.WIDTH / 2) - RADIUS;
+        this.y = pY - 2 * RADIUS;
     }
 }

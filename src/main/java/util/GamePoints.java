@@ -1,4 +1,4 @@
-package components;
+package util;
 
 /**
  * Simple class that represents points of game.
@@ -8,11 +8,14 @@ package components;
  */
 public class GamePoints {
 
-    private static int total  = 0;
+    /**
+     * total points.
+     */
+    private int total  = 0;
 
     /**
      * Adds 10 points to total point balance
-     * after each collision.
+     * after each collision with block.
      */
     public void increment(){
         total += 10;
@@ -29,6 +32,6 @@ public class GamePoints {
         } else if (100 < total && total < 1000) {
             return "0" + total;
         }
-        return "0" + total;
+        return Integer.toString(total);
     }
 }

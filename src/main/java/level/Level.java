@@ -1,10 +1,9 @@
 package level;
 
-import util.SpriteLoader;
+import components.Block;
+
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Simple game component class that represents
@@ -13,67 +12,76 @@ import java.util.Map;
  * @author Alexander Naumov.
  * @version 1.0
  */
-
-
 public class Level {
 
-    public static final int BLOCK_WIDTH = 50;
-    public static final int BLOCK_HEIGHT = 20;
+    /**
+     * Model that represents game field.
+     */
     private static int[][] levelMap;
-    private static Map<BlockType, Block> map;
-    private ArrayList<Rectangle> rectangleList;
 
+    /**
+     * All blocks on game field.
+     */
+    private ArrayList<Block> blocks;
 
     public Level(int[][] array) {
-        map = new HashMap<>();
-        map.put(BlockType.BLUE, new Block(SpriteLoader.load("images/blue.png"), BlockType.BLUE));
-        map.put(BlockType.GREEN, new Block(SpriteLoader.load("images/green.png"), BlockType.GREEN));
-        map.put(BlockType.YELLOW, new Block(SpriteLoader.load("images/yellow.png"), BlockType.YELLOW));
-        map.put(BlockType.RED, new Block(SpriteLoader.load("images/red.png"), BlockType.RED));
-        map.put(BlockType.VIOLET, new Block(SpriteLoader.load("images/violet.png"), BlockType.VIOLET));
-        map.put(BlockType.EMPTY, new Block(SpriteLoader.load("images/grey.png"), BlockType.EMPTY));
-
         levelMap = array;
-        rectangleList = new ArrayList<>();
-
-        updateMap();
-    }
-
-    public ArrayList<Rectangle> getRectangleList() {
-        return rectangleList;
-    }
-
-    public static int[][] getLevelMap() {
-        return levelMap;
-    }
-
-    public void update() {
-        updateMap();
-    }
-
-    private void updateMap(){
-        rectangleList.clear();
+        blocks = new ArrayList<>();
         for (int y = 0; y < levelMap.length; y++) {
             for (int x = 0; x < levelMap[y].length; x++) {
-                if (levelMap[y][x] != 0){
-                    int newX = x * BLOCK_WIDTH;
-                    int newY = y * BLOCK_HEIGHT;
-
-                    rectangleList.add(new Rectangle(newX, newY, BLOCK_WIDTH, BLOCK_HEIGHT));
+                if (levelMap[y][x] != 0) {
+                    blocks.add(new Block(x, y, getByNumeric(levelMap[y][x])));
                 }
             }
         }
     }
 
+    /**
+     * Get all blocks.
+     */
+    public ArrayList<Block> getBlocks() {
+        return blocks;
+    }
+
+    /**
+     * Render all blocks.
+     */
     public void render(Graphics2D g) {
-        for (int y = 0; y < levelMap.length; y++) {
-            for (int x = 0; x < levelMap[y].length; x++) {
-                map.get(BlockType.getByNumeric(levelMap[y][x])).render(g, x * BLOCK_WIDTH, y * BLOCK_HEIGHT);
-            }
+        blocks.forEach(b -> b.render(g));
+    }
+
+    /**
+     * Remove "killed" block from game field and level model.
+     */
+    public void removeBlock(Block block) {
+        int x = block.getBound().x;
+        int y = block.getBound().y;
+        for (Block b : blocks) {
+           if (b.getBound().x == x && b.getBound().y == y) {
+               levelMap[y][x] = 0;
+               blocks.remove(b);
+               break;
+           }
         }
     }
 
-    public void removeBlock(int x, int y) {
-        levelMap[x][y] = 0;
+    /**
+     * Get appropriated block color by number.
+     */
+    private Color getByNumeric(int n) {
+        switch (n) {
+            case 1:
+                return Color.blue;
+            case 2:
+                return Color.green;
+            case 3:
+                return Color.yellow;
+            case 4:
+                return Color.red;
+            case 5:
+                return Color.orange;
+            default:
+                return Color.white;
+        }
     }
 }
